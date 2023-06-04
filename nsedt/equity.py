@@ -35,7 +35,7 @@ def get_price(start_date, end_date, symbol=None, input_type="stock", series="EQ"
     window_size = datetime.timedelta(days=cns.window_size)
 
     current_window_start = start_date
-    while current_window_start < end_date:
+    while True:
         current_window_end = current_window_start + window_size
 
         # check if the current window extends beyond the end_date
@@ -58,6 +58,9 @@ def get_price(start_date, end_date, symbol=None, input_type="stock", series="EQ"
 
         # move the window start to the next day after the current window end
         current_window_start = current_window_end + datetime.timedelta(days=1)
+        
+        if current_window_start >= end_date:
+            break
 
     result = pd.DataFrame()
     with concurrent.futures.ThreadPoolExecutor(max_workers=cns.max_workers) as executor:
